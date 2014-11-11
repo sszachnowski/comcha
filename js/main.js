@@ -39,7 +39,8 @@
         var length = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)),
             angle  = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI,
             transform = 'rotate(' + angle + 'deg)',
-            line = $('<div>')
+            
+            /*line = $('<div>')
                 .appendTo('.sprites-wrapper')
                 .addClass('line')
                 .css({
@@ -47,9 +48,18 @@
                     'transform': transform
                 })
                 .width(length)
-                /*.offset({left: x1, top: y1});*/
                 .css('left', x1 + 12 + 'px')
-                .css('top', y1 + 12 + 'px');
+                .css('top', y1 + 12 + 'px');*/
+            line = document.createElement('div'),
+            spriteswrapper = document.querySelector('.sprites-wrapper');
+        
+        line.setAttribute('class', 'line');
+        line.style.position = "absolute";
+        line.style.transform = transform;
+        line.style.width = length + 'px';
+        line.style.left = x1 + 12 + 'px';
+        line.style.top = y1 + 12 + 'px';
+        spriteswrapper.appendChild(line);
         return line;
     }
     
