@@ -6,7 +6,14 @@
         print, // function printing calculated value
         people = document.getElementById('people'),
         channels = document.getElementById('channels'),
-        text = document.querySelector('.wrapper p');
+        text = document.querySelector('.wrapper p'),
+        // TO DO: automation of sprites capturing
+        sprites = [document.querySelector('.inner-sprite'),
+            document.querySelector('.inner-sprite-two'),
+            document.querySelector('.inner-sprite-three'),
+            document.querySelector('.inner-sprite-four')],
+        line = {}, // line object
+        x = 0;
     
     // Function calculates number of connections between people
     function calculate(number) {
@@ -35,21 +42,19 @@
     // event handler
     input.addEventListener('change', print, false);
     
-    function createLine(x1, y1, x2, y2) {
-        var length = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)),
-            angle  = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI,
+    // constructor Line   
+    function Line(element1, element2) {
+        this.x1 = $(element1).position().left;
+        this.x2 = $(element2).position().left;
+        this.y1 = $(element1).position().top;
+        this.y2 = $(element2).position().top;
+        this.color = '#ffddee';
+    }
+    Line.prototype.drawLine = function () {
+        var length = Math.sqrt(Math.pow(this.x1 - this.x2, 2) + Math.pow(this.y1 - this.y2, 2)),
+            angle  = Math.atan2(this.y2 - this.y1, this.x2 - this.x1) * 180 / Math.PI,
             transform = 'rotate(' + angle + 'deg)',
             
-            /*line = $('<div>')
-                .appendTo('.sprites-wrapper')
-                .addClass('line')
-                .css({
-                    'position': 'absolute',
-                    'transform': transform
-                })
-                .width(length)
-                .css('left', x1 + 12 + 'px')
-                .css('top', y1 + 12 + 'px');*/
             line = document.createElement('div'),
             spriteswrapper = document.querySelector('.sprites-wrapper');
         
@@ -57,14 +62,27 @@
         line.style.position = "absolute";
         line.style.transform = transform;
         line.style.width = length + 'px';
-        line.style.left = x1 + 12 + 'px';
-        line.style.top = y1 + 12 + 'px';
+        line.style.left = this.x1 + 12 + 'px';
+        line.style.top = this.y1 + 12 + 'px';
+        line.style.background = this.color;
         spriteswrapper.appendChild(line);
         return line;
+    };
+    Line.prototype.setColor = function () {
+        // TO DO: pick a random color from colors list
+    };
+    
+    
+    while (sprites.length > 0) {
+        for (x = 0; x < sprites.length; x += 1) {
+            if (x + 1 < sprites.length) {
+                line = new Line(sprites[0], sprites[x + 1]);
+                line.drawLine();
+                line = null;
+            }
+        }
+        sprites.shift();
     }
     
-    createLine(238, -12, 238, 488);
-    createLine(238, -12, -12, 238);
-    createLine(238, -12, 488, 238);
 }());
 
